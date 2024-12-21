@@ -1,29 +1,34 @@
-from fastapi import FastAPI, HTTPException
-from backend import models, crud, database
+from fastapi import Depends, FastAPI, HTTPException
+from backend.database import get_connection, create_database
+from backend.crud import create_movie, get_all_movies, update_movie, delete_movie
 from backend.schemas import MovieCreate, MovieUpdate
 
-app= FastAPI()
+app = FastAPI()
 
-models.Base.metadata.create_all(bind=database.engine)
-
-@app.post("/login/")
-async def login(username: str, password: str):
-    if username =="admin" and password == "password":
-        return{"message": "Login successful"}
-    raise HTTPException(status_code=401, detail="Invalid credentials")
+# Krijo bazën e të dhënave
+create_database()
 
 @app.post("/movies/")
-async def ass_movie(movie: MovieCreate):
-    return crud.create_movie(movie)
+def add_movie(movie: MovieCreate):
+    with get_connection() as db:
+        return create_movie(db, movie)
 
 @app.get("/movies/")
-async  def view_movies():
-    return crud.get_all_movies()
+def list_movies():
+    with get_connection() as db:
+        return get_all_movies(db)
 
 @app.put("/movies/{movie_id}")
-async def update_movie(movie_id: int, movie: MovieUpdate):
-    return crud.update_movie(movie_id, movie)
+def edit_movie(movie_id: int, movie: MovieUpdate):
+    with get_connection() as db:
+        if update_movie(db, movie_id, movie) == 0:
+            raise HTTPException(status_code=404, detail="Movie not found")
+        return {"message": "Movie updated successfully"}
 
 @app.delete("/movies/{movie_id}")
-async def delete_movie(movie_id: int):
-    return crud.delete_movie(movie_id)
+def remove_movie(movie_id: int):
+    with get_connection() as db:
+        if delete_movie(db, movie_id) == 0:
+            raise HTTPException(status_code=404, detail="Movie not found")
+        return {"message": "Movie deleted successfully"}
+
