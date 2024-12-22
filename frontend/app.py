@@ -2,8 +2,8 @@ import os
 import base64
 import streamlit as st
 from login_form import login_form
-from backend.crud import get_all_movies, add_movie, delete_movie, update_movie
-from backend.database import create_database, get_connection
+from streamlit_app import get_all_movies, add_movie, delete_movie, update_movie
+from database import create_database, get_connection
 
 create_database()
 
@@ -25,7 +25,7 @@ def main():
         with st.sidebar:
             st.markdown(logo_html, unsafe_allow_html=True)
 
-    if login_form(): 
+    if login_form():
         st.sidebar.title("Menu")
         option = st.sidebar.radio("Select an option", ["Home", "Add Movie", "Delete Movie", "Update Movie", "View Movies"])
 
@@ -41,7 +41,7 @@ def main():
             genre = st.text_input("Genre (optional)")
 
             if st.button("Add Movie"):
-                with get_connection() as db:
+                with get_connection():
                     add_movie(title, director, year, genre)
                     st.success("Movie added successfully!")
 

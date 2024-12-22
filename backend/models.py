@@ -6,3 +6,5 @@ class Movie(BaseModel):
     director: str
     year: int
     genre: Optional[str]=None
+
+

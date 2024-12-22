@@ -1,11 +1,10 @@
-from fastapi import Depends, FastAPI, HTTPException
-from backend.database import get_connection, create_database
-from backend.crud import create_movie, get_all_movies, update_movie, delete_movie
-from backend.schemas import MovieCreate, MovieUpdate
+from fastapi import  FastAPI, HTTPException
+from database import get_connection, create_database
+from streamlit_app import create_movie, get_all_movies, update_movie, delete_movie
+from schemas import MovieCreate, MovieUpdate
 
 app = FastAPI()
 
-# Krijo bazën e të dhënave
 create_database()
 
 @app.post("/movies/")
@@ -31,4 +30,3 @@ def remove_movie(movie_id: int):
         if delete_movie(db, movie_id) == 0:
             raise HTTPException(status_code=404, detail="Movie not found")
         return {"message": "Movie deleted successfully"}
-

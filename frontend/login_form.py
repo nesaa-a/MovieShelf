@@ -1,9 +1,8 @@
-import streamlit as streamlit
-
+import streamlit as st
 
 def login_form():
 
-    st.title("Login toMovieShelf")
+    st.title("Login to MovieShelf")
     st.write("Please enter your credentials to access the platform.")
 
     username = st.text_input("Username")
@@ -17,4 +16,4 @@ def login_form():
             st.error("Invalid username or password.")
             return False
 
-    return False 
+    return False
