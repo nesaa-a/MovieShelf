@@ -1,24 +1,20 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Union
+from datetime import datetime
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
 
 class MovieCreate(BaseModel):
     title: str
-    director: str
-    year: int
-    genre: Optional[str]= None
+    category: str
+    release_year: int
+    description: Union[str, None] = None  # Përdor Union për tipet opsionale
+    user_id: int
 
 class MovieUpdate(BaseModel):
-    title: Optional[str] = None
-    director: Optional[str]= None
-    year: Optional[str]= None
-    genre: Optional[str]= None
-
-class Movie(BaseModel):
-    id: int
-    title: str
-    director: str
-    year: int
-    genre: Optional[str]= None
-
-    class Config:
-        orm_mode= True
+    title: Union[str, None] = None
+    category: Union[str, None] = None
+    release_year: Union[int, None] = None
+    description: Union[str, None] = None

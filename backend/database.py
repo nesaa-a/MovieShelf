@@ -1,17 +1,23 @@
-import sqlite3
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-def get_connection():
-    return sqlite3.connect("movies.db")
+# Krijo një SQLite Database
+DATABASE_URL = "sqlite:///./movies.db"
 
-def create_database():
-    with get_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS movies (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                description TEXT NOT NULL,
-                year INTEGER NOT NULL
-            )
-        """)
-        conn.commit()
+# Inicializimi i motorit të bazës së të dhënave
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
+# Krijo sesionin e bazës së të dhënave
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Krijo një bazë për modelet
+Base = declarative_base()
+
+
+def get_db():
+  db = SessionLocal()
+  try:
+    yield db
+  finally:
+    db.close()

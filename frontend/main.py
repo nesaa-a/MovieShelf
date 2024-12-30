@@ -1,20 +1,12 @@
 import streamlit as st
-import requests
-from crud.add import add_movie
-from auth.login import login
-from auth.regiser import register
+import pandas as pd
+from charts import view_report
 from auth.logout import logout
-from main import main_app
+from auth.login import login
+from home import home
+from crud import add, update, delete
 import os
 import base64
-
-
-BASE_URL = "http://127.0.0.1:8000"
-
-if "user_authenticated" not in st.session_state:
-    st.session_state.user_authenticated = False
-if "user_id" not in st.session_state:
-    st.session_state.user_id = None
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 logo_path = os.path.join(current_dir, "logo.png")
@@ -25,7 +17,9 @@ def get_image_as_base64(image_path):
         return base64.b64encode(img_file.read()).decode("utf-8")
 
 
-if not st.session_state.user_authenticated:
+def main_app():
+    st.title("Movies Managment 🎥")
+    st.markdown("---")
     if os.path.exists(logo_path):
         logo_base64 = get_image_as_base64(logo_path)
         logo_html = f"""
@@ -35,11 +29,24 @@ if not st.session_state.user_authenticated:
         """
         with st.sidebar:
             st.markdown(logo_html, unsafe_allow_html=True)
-    st.sidebar.header("Authentication")
-    auth_choise = st.sidebar.radio("Choose an option", ["Login", "Register"])
-    if auth_choise == "Login":
-        login()
-    elif auth_choise == "Register":
-        register()
-else:
-    main_app()
+      
+    menu = ["Home", "Add Movie", "Update Movie", "Delete Movie", "Charts", "Logout"]
+    choose_menu = st.sidebar.selectbox("Menu", menu)
+
+    if choose_menu == "Home":
+        home()
+
+    elif choose_menu == "Add Movie":
+        add.add_movie()
+    
+    elif choose_menu == "Update Movie":
+        update.update_movie()
+    
+    elif choose_menu == "Delete Movie":
+        delete.delete_movie()
+
+    elif choose_menu == "Charts":
+        view_report()
+    
+    elif choose_menu == "Logout":
+        logout()
