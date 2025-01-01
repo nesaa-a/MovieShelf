@@ -4,7 +4,7 @@ import os
 import base64
 
 
-BASE_URL = "http://192.168.1.140:8501"
+BASE_URL = "http://127.0.0.1:8000"
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 logo_path = os.path.join(current_dir, "logo.png")

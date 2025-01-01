@@ -10,7 +10,7 @@ class MovieCreate(BaseModel):
     title: str
     category: str
     release_year: int
-    description: Union[str, None] = None  # Përdor Union për tipet opsionale
+    description: Union[str, None] = None  
     user_id: int
 
 class MovieUpdate(BaseModel):
